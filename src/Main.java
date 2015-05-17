@@ -11,11 +11,14 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Scanner;
+import java.util.Set;
 
 public class Main
 {
@@ -113,6 +116,7 @@ public class Main
 /*******************************************************************************************************************************************/
         
         //iterate over the hashmaps of all the languages we're considering
+        //and flip the bool if there is a hit
         for( int i = 0; i < lang_maps.size(); i++ )
         {
         	HashMap<String, Boolean> working_lang_map = lang_maps.get( i );
@@ -134,19 +138,82 @@ public class Main
         	
         }
         
-        
-        //print debugging
-        System.out.println("post");
-        
+        // !!!!!!!!!!!!!!
+    	// this is fragile. since it depends on order. need to make it 
+        // more robust
+    	int total_de  = 0;
+    	int total_fr  = 0;
+    	int total_ru  = 0;
+    	int total_eng = 0;
+    	
+        //iterate over all the hashmaps and count the hit totals
         for( int i = 0; i < lang_maps.size(); i++ )
         {
         	HashMap<String, Boolean> working_lang_map = lang_maps.get( i );
         	
+        	//System.out.println( working_lang_map );
+        	
 	        for (Map.Entry entry : working_lang_map.entrySet()) 
 	        {
-	            System.out.println(entry.getKey() + ", " + entry.getValue());
+	            if( ((Boolean) entry.getValue()) == true )
+	            {
+	            	//this part is really stupid
+	            	if( i == 0)
+	            	{
+	            		total_de++;
+	            	}
+	            	if( i == 1)
+	            	{
+	            		total_fr++;
+	            	}
+	            	if( i == 2)
+	            	{
+	            		total_ru++;
+	            	}
+	            	if( i == 3)
+	            	{
+	            		total_eng++;
+	            	}
+	            }
 	        }
         }
+        
+        HashMap< String, Integer > most_hits_lang = new HashMap<String, Integer>();
+        most_hits_lang.put( "German", total_de );
+        most_hits_lang.put( "French", total_fr );
+        most_hits_lang.put( "Russian", total_ru );
+        most_hits_lang.put( "English", total_eng );
+
+        
+        Entry<String,Integer> maxEntry = null;
+
+        for(Entry<String,Integer> entry : most_hits_lang.entrySet()) 
+        {
+            if (maxEntry == null || entry.getValue() > maxEntry.getValue()) 
+            {
+                maxEntry = entry;
+            }
+        }
+        
+        System.out.println( maxEntry.getKey() );
+
+
+    	
+    	
+    	
+        
+//        //print debugging
+//        System.out.println("post");
+//        
+//        for( int i = 0; i < lang_maps.size(); i++ )
+//        {
+//        	HashMap<String, Boolean> working_lang_map = lang_maps.get( i );
+//        	
+//	        for (Map.Entry entry : working_lang_map.entrySet()) 
+//	        {
+//	            System.out.println(entry.getKey() + ", " + entry.getValue());
+//	        }
+//        }
 
         
         
